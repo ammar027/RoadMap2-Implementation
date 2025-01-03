@@ -4,8 +4,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react'; // Import PersistGate
-import store, { persistor } from './src/redux/store'; // Import persistor
+import { PersistGate } from 'redux-persist/integration/react';
+import store, { persistor } from './src/redux/store';
 import HomeScreen from './screens/Home';
 import Details from './screens/Create';
 import ProfileScreen from './screens/Profile';
@@ -17,16 +17,15 @@ import UserPage from './screens/User';
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
-
-function TabNavigator({ navigation }) {
+function TabNavigator() {
   const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
-      <StatusBar translucent backgroundColor="white" barStyle="dark-content" />
+      <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
       <Tab.Navigator
         initialRouteName="Home"
-        screenOptions={({ route, navigation }) => ({
+        screenOptions={({ route }) => ({
           tabBarIcon: ({ color, size }) => {
             let iconName;
             if (route.name === 'Home') iconName = 'home';
@@ -44,39 +43,13 @@ function TabNavigator({ navigation }) {
             borderTopColor: '#ddd',
             height: 60,
           },
-          headerStyle: {
-            backgroundColor: '#fff',
-            borderBottomWidth: 1,
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.1,
-            shadowRadius: 4,
-          },
+          headerShown: route.name !== 'Home', // Hide header for Home screen
           headerTitleAlign: 'center',
           headerTitleStyle: {
             fontSize: 20,
-            fontWeight: '650',
+            fontWeight: 'bold',
             color: '#333',
           },
-          headerLeft: () =>
-            route.name !== 'Home' ? (
-              <Icon
-                name="arrow-back"
-                size={24}
-                color="#007AFF"
-                onPress={() => navigation.goBack()}
-                style={{ marginLeft: 10 }}
-              />
-            ) : null,
-          headerRight: () => (
-            <Icon
-              name="menu"
-              size={26}
-              color="#000"
-              onPress={() => navigation.toggleDrawer()}
-              style={{ marginRight: 10 }}
-            />
-          ),
         })}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
@@ -93,14 +66,15 @@ export default function App() {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <NavigationContainer>
-          <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
           <Drawer.Navigator
             initialRouteName="Tabs"
-            drawerPosition="right"  // Make sure the drawerPosition is set to 'right'
+            drawerPosition="right"
             screenOptions={{
               headerShown: false,
-              drawerActiveTintColor: 'skyblue',
+              drawerActiveTintColor: '#007AFF',
               drawerInactiveTintColor: 'gray',
+              drawerLabelStyle: { fontSize: 16 },
+              drawerStyle: { backgroundColor: '#f8f9fa', width: 250 },
             }}
           >
             <Drawer.Screen
@@ -137,7 +111,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: 0, // No margin
+    margin: 0,
     padding: 0,
   },
 });
