@@ -1,118 +1,142 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { StatusBar, StyleSheet, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react'; // Import PersistGate
+import store, { persistor } from './src/redux/store'; // Import persistor
+import HomeScreen from './screens/Home';
+import Details from './screens/Create';
+import ProfileScreen from './screens/Profile';
+import SettingsScreen from './screens/Settings';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useTranslation } from 'react-i18next';
+import UserPage from './screens/User';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const Tab = createBottomTabNavigator();
+const Drawer = createDrawerNavigator();
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+function TabNavigator({ navigation }) {
+  const { t } = useTranslation();
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
+    <View style={styles.container}>
+      <StatusBar translucent backgroundColor="white" barStyle="dark-content" />
+      <Tab.Navigator
+        initialRouteName="Home"
+        screenOptions={({ route, navigation }) => ({
+          tabBarIcon: ({ color, size }) => {
+            let iconName;
+            if (route.name === 'Home') iconName = 'home';
+            else if (route.name === 'Create') iconName = 'create';
+            else if (route.name === 'My Profile') iconName = 'person';
+            else if (route.name === 'Users') iconName = 'people';
+
+            return <Icon name={iconName} size={size} color={color} />;
           },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
+          tabBarActiveTintColor: '#007AFF',
+          tabBarInactiveTintColor: 'gray',
+          tabBarStyle: {
+            backgroundColor: '#fff',
+            borderTopWidth: 0.5,
+            borderTopColor: '#ddd',
+            height: 60,
           },
-        ]}>
-        {children}
-      </Text>
+          headerStyle: {
+            backgroundColor: '#fff',
+            borderBottomWidth: 1,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+          },
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: 20,
+            fontWeight: '650',
+            color: '#333',
+          },
+          headerLeft: () =>
+            route.name !== 'Home' ? (
+              <Icon
+                name="arrow-back"
+                size={24}
+                color="#007AFF"
+                onPress={() => navigation.goBack()}
+                style={{ marginLeft: 10 }}
+              />
+            ) : null,
+          headerRight: () => (
+            <Icon
+              name="menu"
+              size={26}
+              color="#000"
+              onPress={() => navigation.toggleDrawer()}
+              style={{ marginRight: 10 }}
+            />
+          ),
+        })}
+      >
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Create" component={Details} />
+        <Tab.Screen name="Users" component={UserPage} />
+        <Tab.Screen name="My Profile" component={ProfileScreen} />
+      </Tab.Navigator>
     </View>
   );
 }
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
+export default function App() {
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <NavigationContainer>
+          <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
+          <Drawer.Navigator
+            initialRouteName="Tabs"
+            drawerPosition="right"  // Make sure the drawerPosition is set to 'right'
+            screenOptions={{
+              headerShown: false,
+              drawerActiveTintColor: 'skyblue',
+              drawerInactiveTintColor: 'gray',
+            }}
+          >
+            <Drawer.Screen
+              name="Tabs"
+              component={TabNavigator}
+              options={{
+                title: 'Home Tabs',
+                drawerIcon: ({ color, size }) => <Icon name="view-module" size={size} color={color} />,
+              }}
+            />
+            <Drawer.Screen
+              name="Profile"
+              component={ProfileScreen}
+              options={{
+                title: 'Profile',
+                drawerIcon: ({ color, size }) => <Icon name="person" size={size} color={color} />,
+              }}
+            />
+            <Drawer.Screen
+              name="Settings"
+              component={SettingsScreen}
+              options={{
+                title: 'Settings',
+                drawerIcon: ({ color, size }) => <Icon name="settings" size={size} color={color} />,
+              }}
+            />
+          </Drawer.Navigator>
+        </NavigationContainer>
+      </PersistGate>
+    </Provider>
   );
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  container: {
+    flex: 1,
+    margin: 0, // No margin
+    padding: 0,
   },
 });
-
-export default App;

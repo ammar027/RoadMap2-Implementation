@@ -1,0 +1,22 @@
+{
+  "home": "Inicio",
+  "details": "Detalles",
+  "profile": "Perfil",
+  "post_title": "Publicaciones",
+  "create_new_post": "Crear nueva publicación",
+  "post_title_placeholder": "Título de la publicación",
+  "post_content_placeholder": "Contenido de la publicación",
+  "create_post_button": "Crear publicación y volver",
+  "no_posts": "No hay publicaciones disponibles.",
+  "delete_post": "Eliminar publicación",
+  "post_deleted": "Publicación eliminada",
+  "post_removed": "La publicación ha sido eliminada.",
+  "settings.title": "Configuraciones",
+  "users": "Usuarios",
+  "my_profile": "Mi perfil",
+  "edit_profile": "Editar perfil",
+  "logout": "Cerrar sesión",
+  "edit_button": "Editar",
+  "logout_button": "Cerrar sesión",
+  "menu": "Menú"
+}
