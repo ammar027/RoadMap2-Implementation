@@ -12,5 +12,6 @@
   "post_deleted": "Post Deleted",
   "post_removed": "The post has been removed.",
   "settings.title": "Settings",
-  "settings.close": "Close"
+  "settings.close": "Close",
+  "please_login" : "Please Login"
 }

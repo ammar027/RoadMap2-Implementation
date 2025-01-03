@@ -1,129 +1,63 @@
-import React, { useEffect, useState } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, Image, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView, View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+import { signIn, signOut } from '../src/redux/userdataSlice';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const ProfileScreen = () => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { isSignedIn, userName, userEmail } = useSelector((state) => state.userdata);
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    // Fetch random user data from API
-    fetch('https://randomuser.me/api/')
-      .then((response) => response.json())
-      .then((data) => {
-        setUser(data.results[0]);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching user:', error);
-        setLoading(false);
-      });
-  }, []);
-
-  const handleEditProfile = () => {
-    Alert.alert('Edit Profile', 'Edit Profile button clicked!');
+  const handleSignIn = () => {
+    dispatch(signIn({ userName: 'John Doe', userEmail: 'john.doe@example.com' }));
+    Alert.alert('Signed In', 'You are now signed in!');
   };
 
-  const handleLogout = () => {
-    Alert.alert('Logout', 'Logout button clicked!');
+  const handleSignOut = () => {
+    dispatch(signOut());
+    Alert.alert('Signed Out', 'You have been signed out!');
   };
-
-  if (loading) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </SafeAreaView>
-    );
-  }
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.profileContainer}>
-        <Image source={{ uri: user.picture.large }} style={styles.profileImage} />
-        <View style={styles.textContainer}>
-          <Text style={styles.profileName}>
-            {user.name.first} {user.name.last}
-          </Text>
-          <Text style={styles.profileEmail}>{user.email}</Text>
+      {isSignedIn ? (
+        <View style={styles.profileContainer}>
+          <Image
+            source={{ uri: 'https://randomuser.me/api/portraits/men/75.jpg' }}
+            style={styles.profileImage}
+          />
+          <View style={styles.textContainer}>
+            <Text style={styles.profileName}>{userName}</Text>
+            <Text style={styles.profileEmail}>{userEmail}</Text>
+          </View>
+          <TouchableOpacity style={[styles.button, styles.logoutButton]} onPress={handleSignOut}>
+            <Icon name="logout" size={20} color="#fff" />
+            <Text style={styles.buttonText}>Sign Out</Text>
+          </TouchableOpacity>
         </View>
-      </View>
-
-      <View style={styles.actionContainer}>
-        <TouchableOpacity style={styles.button} onPress={handleEditProfile}>
-          <Icon name="edit" size={20} color="#fff" />
-          <Text style={styles.buttonText}>Edit Profile</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, styles.logoutButton]} onPress={handleLogout}>
-          <Icon name="logout" size={20} color="#fff" />
-          <Text style={styles.buttonText}>Logout</Text>
-        </TouchableOpacity>
-      </View>
+      ) : (
+        <View style={styles.actionContainer}>
+          <TouchableOpacity style={styles.button} onPress={handleSignIn}>
+            <Icon name="login" size={20} color="#fff" />
+            <Text style={styles.buttonText}>Sign In</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f4f4f9',
-    alignItems: 'center',
-    padding: 16,
-  },
-  profileContainer: {
-    flexDirection: 'row',
-    alignItems: 'center', // This ensures that the name and email are aligned horizontally with the image
-    marginVertical: 24,
-    width: '100%',
-  },
-  profileImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    marginRight: 20, // Added margin to separate the image from text
-    borderWidth: 4,
-    borderColor: '#fff',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 5,
-  },
-  textContainer: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
-  profileName: {
-    fontSize: 26,
-    fontWeight: '700',
-    color: '#333',
-    marginBottom: 8,
-  },
-  profileEmail: {
-    fontSize: 16,
-    color: '#666',
-  },
-  actionContainer: {
-    width: '100%',
-    marginTop: 32,
-  },
-  button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'skyblue',
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    marginVertical: 8,
-    borderRadius: 8,
-  },
-  logoutButton: {
-    backgroundColor: 'tomato',
-  },
-  buttonText: {
-    marginLeft: 12,
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
+  container: { flex: 1, backgroundColor: '#f4f4f9', alignItems: 'center', padding: 16 },
+  profileContainer: { alignItems: 'center', marginVertical: 24 },
+  profileImage: { width: 120, height: 120, borderRadius: 60, marginBottom: 16 },
+  textContainer: { alignItems: 'center', marginBottom: 24 },
+  profileName: { fontSize: 26, fontWeight: '700', color: '#333' },
+  profileEmail: { fontSize: 16, color: '#666' },
+  actionContainer: { justifyContent: 'center', alignItems: 'center', flex: 1 },
+  button: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: 'skyblue', paddingVertical: 14, paddingHorizontal: 20, borderRadius: 8 },
+  logoutButton: { backgroundColor: 'tomato' },
+  buttonText: { marginLeft: 12, color: '#fff', fontSize: 16, fontWeight: '600' },
 });
 
 export default ProfileScreen;

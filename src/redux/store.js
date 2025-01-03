@@ -3,22 +3,19 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from '@react-native-async-storage/async-storage';
 import postsReducer from './postsSlice';
 import userReducer from './userSlice';
+import userdataReducer from './userdataSlice'; // Import userdata slice
 
-// Add the user reducer to the rootReducer
+// Combine reducers
 const rootReducer = combineReducers({
   posts: postsReducer,
-  users: userReducer, // Add userSlice here
+  users: userReducer,
+  userdata: userdataReducer, // Use the proper reducer
 });
-
-// Other configurations remain unchanged
-
 
 const persistConfig = {
   key: 'root',
   storage,
 };
-
-
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

@@ -17,6 +17,7 @@ import UserPage from './screens/User';
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
+
 function TabNavigator({ navigation }) {
   const { t } = useTranslation();
 
