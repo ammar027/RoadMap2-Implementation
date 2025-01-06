@@ -49,6 +49,7 @@ const ProfileScreen = () => {
                   value={editableEmail}
                   onChangeText={setEditableEmail}
                   keyboardType="email-address"
+                  defaultValue='Email'
                 />
               </>
             ) : (
