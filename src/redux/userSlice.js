@@ -1,15 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-
-// Define an async thunk for fetching random users
-export const fetchUsers = createAsyncThunk('users/fetchUsers', async (_, thunkAPI) => {
-  try {
-    const response = await fetch('https://randomuser.me/api/?results=10');
-    const data = await response.json();
-    return data.results; // Return the users array
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.message);
-  }
-});
+import { createSlice } from '@reduxjs/toolkit';
 
 const userSlice = createSlice({
   name: 'users',
@@ -18,22 +7,21 @@ const userSlice = createSlice({
     loading: false,
     error: null,
   },
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchUsers.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchUsers.fulfilled, (state, action) => {
-        state.loading = false;
-        state.data = action.payload;
-      })
-      .addCase(fetchUsers.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
+  reducers: {
+    fetchUsers: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    fetchUsersSuccess: (state, action) => {
+      state.loading = false;
+      state.data = action.payload;
+    },
+    fetchUsersFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
   },
 });
 
+export const { fetchUsers, fetchUsersSuccess, fetchUsersFailure } = userSlice.actions;
 export default userSlice.reducer;

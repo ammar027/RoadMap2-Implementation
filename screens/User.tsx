@@ -6,19 +6,17 @@ import { fetchUsers } from '../src/redux/userSlice';
 const UserPage = () => {
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector((state) => state.users);
-  
-  // Local state for managing refresh control
+
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchUsers()); // Fetch users when the component mounts
+    dispatch(fetchUsers()); // Trigger saga to fetch users
   }, [dispatch]);
 
-  // Function to handle pull-to-refresh
   const onRefresh = () => {
     setRefreshing(true);
-    dispatch(fetchUsers())
-      .finally(() => setRefreshing(false)); // Reset refreshing state after fetch
+    dispatch(fetchUsers());
+    setRefreshing(false);
   };
 
   if (loading && !refreshing) {
@@ -55,10 +53,10 @@ const UserPage = () => {
         )}
         refreshControl={
           <RefreshControl
-            refreshing={refreshing}  // State to control the refresh indicator
-            onRefresh={onRefresh}    // Function to call when refreshing
-            colors={['#4A90E2']}      // Customize the color of the refresh indicator
-            progressBackgroundColor="#ffffff"  // Background color of the refresh spinner
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={['#4A90E2']}
+            progressBackgroundColor="#ffffff"
           />
         }
       />
@@ -113,4 +111,3 @@ const styles = StyleSheet.create({
 });
 
 export default UserPage;
-
