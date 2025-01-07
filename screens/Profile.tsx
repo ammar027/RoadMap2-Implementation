@@ -13,17 +13,21 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { signIn, signOut } from '../src/redux/userdataSlice';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { GoogleSignin, statusCodes} from '@react-native-google-signin/google-signin';
+
 
 const { LoginModule } = NativeModules; // Access your native module
+
 
 const ProfileScreen = () => {
   const { isSignedIn, userName, userEmail } = useSelector(state => state.userdata);
   const dispatch = useDispatch();
 
+  
   const [editableName, setEditableName] = useState(userName);
   const [editableEmail, setEditableEmail] = useState(userEmail);
   const [isEditing, setIsEditing] = useState(false); // State to toggle edit mode
-
+  
   const checkLoginStatus = async () => {
     try {
       const isSignedIn = await LoginModule.checkLoginStatus();
@@ -37,10 +41,16 @@ const ProfileScreen = () => {
     } catch (error) {
     }
   };
-
+  
   useEffect(() => {
     checkLoginStatus();
   }, []); // Empty dependency array, runs only once after the initial render
+  
+  useEffect(() => {
+    GoogleSignin.configure({webClientId:'72666036321-qpf7p03d83iujevsedip3i0u2d2j3mph.apps.googleusercontent.com'})
+  })
+    
+
 
   const handleSignIn = () => {
     dispatch(signIn({ userName: editableName, userEmail: editableEmail }));
@@ -135,6 +145,20 @@ const ProfileScreen = () => {
           <TouchableOpacity
             style={[styles.button, styles.loginButton]}
             onPress={handleShowLoginScreen} // Trigger native login screen
+          >
+            <Icon name="login" size={20} color="#fff" />
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, styles.signupButton]}
+            onPress={} // Trigger native signup screen
+          >
+            <Icon name="person-add" size={20} color="#fff" />
+            <Text style={styles.buttonText}>Signup</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, styles.loginButton]}
+            onPress={} // Trigger native login screen
           >
             <Icon name="login" size={20} color="#fff" />
             <Text style={styles.buttonText}>Login</Text>

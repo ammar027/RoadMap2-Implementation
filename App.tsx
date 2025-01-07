@@ -14,6 +14,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useTranslation} from 'react-i18next';
 import UserPage from './screens/User';
 import CounterJotai from './screens/counterScreen';
+import Chats from './screens/Chats';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -34,7 +35,7 @@ function TabNavigator() {
           tabBarIcon: ({color, size}) => {
             let iconName;
             if (route.name === 'Home') iconName = 'home';
-            else if (route.name === 'Create') iconName = 'create';
+            else if (route.name === 'Message') iconName = 'message';
             else if (route.name === 'My Profile') iconName = 'person';
             else if (route.name === 'Users') iconName = 'people';
 
@@ -57,7 +58,7 @@ function TabNavigator() {
           },
         })}>
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Create" component={Details} />
+        <Tab.Screen name="Chats" component={Chats} />
         <Tab.Screen name="Users" component={UserPage} />
         <Tab.Screen name="My Profile" component={ProfileScreen} />
       </Tab.Navigator>
