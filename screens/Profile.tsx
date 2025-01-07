@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
   View,
@@ -17,12 +17,30 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 const { LoginModule } = NativeModules; // Access your native module
 
 const ProfileScreen = () => {
-  const { isSignedIn, userName, userEmail } = useSelector((state) => state.userdata);
+  const { isSignedIn, userName, userEmail } = useSelector(state => state.userdata);
   const dispatch = useDispatch();
 
   const [editableName, setEditableName] = useState(userName);
   const [editableEmail, setEditableEmail] = useState(userEmail);
   const [isEditing, setIsEditing] = useState(false); // State to toggle edit mode
+
+  const checkLoginStatus = async () => {
+    try {
+      const isSignedIn = await LoginModule.checkLoginStatus();
+      if (isSignedIn) {
+        const userName = await LoginModule.getUserName(); // If exposed
+        const userEmail = await LoginModule.getUserEmail(); // If exposed
+        dispatch(signIn({ userName, userEmail }));
+      } else {
+        dispatch(signOut());
+      }
+    } catch (error) {
+    }
+  };
+
+  useEffect(() => {
+    checkLoginStatus();
+  }, []); // Empty dependency array, runs only once after the initial render
 
   const handleSignIn = () => {
     dispatch(signIn({ userName: editableName, userEmail: editableEmail }));
@@ -81,8 +99,7 @@ const ProfileScreen = () => {
           {isEditing ? (
             <TouchableOpacity
               style={[styles.button, styles.saveButton]}
-              onPress={handleSaveChanges}
-            >
+              onPress={handleSaveChanges}>
               <Icon name="save" size={20} color="#fff" />
               <Text style={styles.buttonText}>Save Changes</Text>
             </TouchableOpacity>
@@ -97,8 +114,7 @@ const ProfileScreen = () => {
           )}
           <TouchableOpacity
             style={[styles.button, styles.logoutButton]}
-            onPress={handleSignOut}
-          >
+            onPress={handleSignOut}>
             <Icon name="logout" size={20} color="#fff" />
             <Text style={styles.buttonText}>Sign Out</Text>
           </TouchableOpacity>
@@ -130,12 +146,32 @@ const ProfileScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f4f4f9', alignItems: 'center', padding: 16 },
+  container: {
+    flex: 1,
+    backgroundColor: '#f4f4f9',
+    alignItems: 'center',
+    padding: 16,
+  },
   profileContainer: { alignItems: 'center', marginVertical: 24 },
   profileImage: { width: 120, height: 120, borderRadius: 60, marginBottom: 16 },
   textContainer: { alignItems: 'center', marginBottom: 24 },
-  profileName: { fontSize: 26, fontWeight: '700', color: '#333', padding: 10, borderBottomWidth: 1, width: 200, textAlign: 'center' },
-  profileEmail: { fontSize: 16, color: '#666', borderBottomWidth: 1, width: 300, textAlign: 'center', padding: 10 },
+  profileName: {
+    fontSize: 26,
+    fontWeight: '700',
+    color: '#333',
+    padding: 10,
+    borderBottomWidth: 1,
+    width: 200,
+    textAlign: 'center',
+  },
+  profileEmail: {
+    fontSize: 16,
+    color: '#666',
+    borderBottomWidth: 1,
+    width: 300,
+    textAlign: 'center',
+    padding: 10,
+  },
   actionContainer: { justifyContent: 'center', alignItems: 'center', flex: 1 },
   button: {
     flexDirection: 'row',

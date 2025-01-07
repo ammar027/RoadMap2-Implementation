@@ -2,6 +2,7 @@ package com.task1w2;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,8 +34,18 @@ public class LoginActivity extends AppCompatActivity {
             if (emailText.isEmpty() || passwordText.isEmpty()) {
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             } else {
+                // Assuming the login is successful
                 Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show();
                 sendNotification(); // Trigger a notification on login
+
+                // Save the login state in SharedPreferences
+                SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putBoolean("isSignedIn", true); // Save login status as true
+                editor.putString("userName", emailText); // Save user details (assuming email as username)
+                editor.putString("userEmail", emailText); // Save the email
+                editor.apply(); // Apply changes to SharedPreferences
+
                 // Navigate to ProfileActivity or home screen here
             }
         });
