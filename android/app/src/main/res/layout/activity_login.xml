@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
 
     <TextView
         android:layout_width="wrap_content"
@@ -15,21 +16,27 @@
         android:textStyle="bold" />
 
     <EditText
+        android:id="@+id/emailEditText"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:hint="Enter Email" />
+        android:hint="Enter Email"
+        android:inputType="textEmailAddress" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:hint="Enter Password" />
+<EditText
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_marginTop="20dp"
+    android:hint="Enter Password"
+    android:inputType="textPassword" />
+
+
     <Button
+        android:id="@+id/loginButton"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginLeft="20dp"
@@ -38,5 +45,4 @@
         android:background="#4A90E2"
         android:textColor="#ffffff"
         android:text="Login"/>
-
 </LinearLayout>

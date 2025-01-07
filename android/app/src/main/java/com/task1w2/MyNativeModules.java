@@ -39,4 +39,6 @@ public class MyNativeModules extends ReactContextBaseJavaModule {
             getCurrentActivity().startActivity(intent);
         }
     }
+
+    
 }
