@@ -2382,6 +2382,14 @@
   dependencies:
     color "^4.2.3"
 
+"@react-navigation/native-stack@^7.2.0":
+  version "7.2.0"
+  resolved "https://registry.npmjs.org/@react-navigation/native-stack/-/native-stack-7.2.0.tgz"
+  integrity sha512-mw7Nq9qQrGsmJmCTwIIWB7yY/3tWYXvQswx+HJScGAadIjemvytJXm1fcl3+YZ9T9Ym0aERcVe5kDs+ny3X4vA==
+  dependencies:
+    "@react-navigation/elements" "^2.2.5"
+    warn-once "^0.1.1"
+
 "@react-navigation/native@^7.0.14":
   version "7.0.14"
   resolved "https://registry.npmjs.org/@react-navigation/native/-/native-7.0.14.tgz"
@@ -2399,6 +2407,14 @@
   integrity sha512-emdEjpVDK8zbiu2GChC8oYIAub9i/OpNuQJekVsbyFCBz4/TzaBzms38Q53YaNhdIFNmiYLfHv/Y1Ub7KYfm3w==
   dependencies:
     nanoid "3.3.8"
+
+"@react-navigation/stack@^7.1.1":
+  version "7.1.1"
+  resolved "https://registry.npmjs.org/@react-navigation/stack/-/stack-7.1.1.tgz"
+  integrity sha512-CBTKQlIkELp05zRiTAv5Pa7OMuCpKyBXcdB3PGMN2Mm55/5MkDsA1IaZorp/6TsVCdllITD6aTbGX/HA/88A6w==
+  dependencies:
+    "@react-navigation/elements" "^2.2.5"
+    color "^4.2.3"
 
 "@redux-saga/core@^1.3.0":
   version "1.3.0"
@@ -4548,6 +4564,11 @@ hermes-parser@0.25.1:
   dependencies:
     hermes-estree "0.25.1"
 
+hex-color-regex@~1.0.2:
+  version "1.0.3"
+  resolved "https://registry.npmjs.org/hex-color-regex/-/hex-color-regex-1.0.3.tgz"
+  integrity sha512-YJCMR6n7Gqrxp7HVggtxJF5XatzSrT3jX39hpLtEFQNf6x+xhlC07vI6omqDkjBtJrw8uCsCHYhppCsU+Y2m/w==
+
 hoist-non-react-statics@^3.3.0:
   version "3.3.2"
   resolved "https://registry.npmjs.org/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz"
@@ -4800,6 +4821,13 @@ is-glob@^4.0.0, is-glob@^4.0.1, is-glob@^4.0.3:
   integrity sha512-xelSayHH36ZgE7ZWhli7pW34hNbNl8Ojv5KVmkJD4hBdD3th8Tfk9vYasLM+mXWOZhFkgZfxhLSnrwRr4elSSg==
   dependencies:
     is-extglob "^2.1.1"
+
+is-hexcolor@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/is-hexcolor/-/is-hexcolor-1.0.0.tgz"
+  integrity sha512-exeAJKlQsEjg3Sc5604FLXt59MQXkUIVKdJTRLAdLwJM42zCngVyLbEt2gQtb9TSRVzCIbaWbzgDKjbJIBzBFQ==
+  dependencies:
+    hex-color-regex "~1.0.2"
 
 is-interactive@^1.0.0:
   version "1.0.0"
@@ -6602,6 +6630,13 @@ react-native-screens@^4.4.0, "react-native-screens@>= 4.0.0":
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
+react-native-sweet-alert@^3.5.0:
+  version "3.5.0"
+  resolved "https://registry.npmjs.org/react-native-sweet-alert/-/react-native-sweet-alert-3.5.0.tgz"
+  integrity sha512-h2W7zM+s7C/Ub4dvHK1mSSB3lQbwpYhbwkS3JOPKTY+w23t8rNTOFxUBNeA9K5F98fzz0fPqj6VX2gsuPD1h1A==
+  dependencies:
+    is-hexcolor "^1.0.0"
+
 react-native-vector-icons@^10.2.0:
   version "10.2.0"
   resolved "https://registry.npmjs.org/react-native-vector-icons/-/react-native-vector-icons-10.2.0.tgz"
@@ -7739,7 +7774,7 @@ walker@^1.0.7, walker@^1.0.8:
   dependencies:
     makeerror "1.0.12"
 
-warn-once@^0.1.0:
+warn-once@^0.1.0, warn-once@^0.1.1:
   version "0.1.1"
   resolved "https://registry.npmjs.org/warn-once/-/warn-once-0.1.1.tgz"
   integrity sha512-VkQZJbO8zVImzYFteBXvBOZEl1qL175WH8VmZcxF2fZAoudNhNDvHi+doCaAEdU2l2vtcIwa2zn0QK5+I1HQ3Q==

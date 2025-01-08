@@ -1,26 +1,51 @@
 import React from 'react';
-import {StatusBar, StyleSheet, View} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import {Provider} from 'react-redux';
-import {PersistGate} from 'redux-persist/integration/react';
-import store, {persistor} from './src/redux/store';
+import {
+  StatusBar,
+  StyleSheet,
+  View,
+} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import store, { persistor } from './src/redux/store';
 import HomeScreen from './screens/Home';
 import Details from './screens/Create';
 import ProfileScreen from './screens/Profile';
 import SettingsScreen from './screens/Settings';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import UserPage from './screens/User';
 import CounterJotai from './screens/counterScreen';
 import Chats from './screens/Chats';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
+const Stack = createNativeStackNavigator();
+
+const AppTheme = {
+  colors: {
+    primary: '#007AFF',
+    background: '#F5F5F5',
+    textPrimary: '#333',
+    textSecondary: 'gray',
+    border: '#DDD',
+  },
+  fonts: {
+    title: {
+      fontSize: 20,
+      fontWeight: 'bold',
+    },
+    label: {
+      fontSize: 16,
+    },
+  },
+};
 
 function TabNavigator() {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
@@ -31,38 +56,44 @@ function TabNavigator() {
       />
       <Tab.Navigator
         initialRouteName="Home"
-        screenOptions={({route}) => ({
-          tabBarIcon: ({color, size}) => {
-            let iconName;
-            if (route.name === 'Home') iconName = 'home';
-            else if (route.name === 'Message') iconName = 'message';
-            else if (route.name === 'My Profile') iconName = 'person';
-            else if (route.name === 'Users') iconName = 'people';
-
-            return <Icon name={iconName} size={size} color={color} />;
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ color, size }) => {
+            const icons = {
+              Home: 'home',
+              Create: 'edit',
+              Users: 'people',
+              'My Profile': 'person',
+            };
+        
+            return <Icon name={icons[route.name]} size={size} color={color} />;
           },
-          tabBarActiveTintColor: '#007AFF',
-          tabBarInactiveTintColor: 'gray',
-          tabBarStyle: {
-            backgroundColor: '#fff',
-            borderTopWidth: 0.5,
-            borderTopColor: '#ddd',
-            height: 60,
-          },
-          headerShown: route.name !== 'Home', // Hide header for Home screen
+          tabBarActiveTintColor: AppTheme.colors.primary,
+          tabBarInactiveTintColor: AppTheme.colors.textSecondary,
+          tabBarStyle: styles.tabBarStyle,
+          headerShown: route.name !== 'Home',
           headerTitleAlign: 'center',
-          headerTitleStyle: {
-            fontSize: 20,
-            fontWeight: 'bold',
-            color: '#333',
-          },
-        })}>
+          headerTitleStyle: [
+            AppTheme.fonts.title,
+            { color: AppTheme.colors.textPrimary },
+          ],
+        })}
+      >
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Chats" component={Chats} />
+        <Tab.Screen name="Create" component={Details} />
         <Tab.Screen name="Users" component={UserPage} />
         <Tab.Screen name="My Profile" component={ProfileScreen} />
       </Tab.Navigator>
     </View>
+  );
+}
+
+function ModalStack() {
+  return (
+    <Stack.Navigator screenOptions={{presentation: 'modal'}}>
+      <Stack.Screen name="HomeTabs" component={TabNavigator} options={{headerShown: false}} />
+      <Stack.Screen name="Create" component={Details} options={{title: 'Create Item',headerShown: true}} />
+      <Stack.Screen name="Chats" component={Chats} options={{title: 'Chats',headerShown: true}} />
+    </Stack.Navigator>
   );
 }
 
@@ -73,7 +104,7 @@ export default function App() {
         <NavigationContainer>
           <Drawer.Navigator
             initialRouteName="Tabs"
-            drawerPosition="right"
+            drawerPosition="left"
             screenOptions={{
               headerShown: false,
               drawerActiveTintColor: '#007AFF',
@@ -83,7 +114,7 @@ export default function App() {
             }}>
             <Drawer.Screen
               name="Tabs"
-              component={TabNavigator}
+              component={ModalStack}
               options={{
                 title: 'Home Tabs',
                 drawerIcon: ({color, size}) => (
@@ -115,7 +146,7 @@ export default function App() {
               name="Counter"
               component={CounterJotai}
               options={{
-                title: 'counter',
+                title: 'Counter',
                 drawerIcon: ({color, size}) => (
                   <Icon name="settings" size={size} color={color} />
                 ),
@@ -127,11 +158,18 @@ export default function App() {
     </Provider>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: 0,
-    padding: 0,
+  },
+  tabBarStyle: {
+    backgroundColor: AppTheme.colors.background,
+    borderTopWidth: 0.5,
+    borderTopColor: AppTheme.colors.border,
+    height: 60,
+  },
+  drawerStyle: {
+    backgroundColor: AppTheme.colors.background,
+    width: 250,
   },
 });

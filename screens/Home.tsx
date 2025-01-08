@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -8,14 +8,15 @@ import {
   Alert,
   Animated,
 } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
-import { deletePost } from '../src/redux/postsSlice';
+import {useSelector, useDispatch} from 'react-redux';
+import {deletePost} from '../src/redux/postsSlice';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {Ionicons} from 'react-native-vector-icons';
 
-function HomeScreen({ navigation }) {
+function HomeScreen({navigation}) {
   const posts = useSelector(state => state.posts);
-  const { isSignedIn, userName } = useSelector(state => state.userdata);
+  const {isSignedIn, userName} = useSelector(state => state.userdata);
   const dispatch = useDispatch();
 
   const notificationOpacity = useRef(new Animated.Value(0)).current; // For fade-in/out animation
@@ -48,14 +49,13 @@ function HomeScreen({ navigation }) {
     Alert.alert('Post Deleted', 'Post has been removed.');
   };
 
-  const renderPost = ({ item, index }) => (
+  const renderPost = ({item, index}) => (
     <View style={styles.post}>
       <Text style={styles.postTitle}>{item.title}</Text>
       <Text>{item.content}</Text>
       <TouchableOpacity
         style={styles.deleteButton}
-        onPress={() => handleDeletePost(index)}
-      >
+        onPress={() => handleDeletePost(index)}>
         <FontAwesome name="trash" size={18} color="#fff" />
       </TouchableOpacity>
     </View>
@@ -66,8 +66,7 @@ function HomeScreen({ navigation }) {
       {!isSignedIn && (
         <>
           <Animated.View
-            style={[styles.notification, { opacity: notificationOpacity }]}
-          >
+            style={[styles.notification, {opacity: notificationOpacity}]}>
             <Text style={styles.notificationText}>
               Please log in to view posts.🙂
             </Text>
@@ -83,11 +82,16 @@ function HomeScreen({ navigation }) {
           <View style={styles.header}>
             <TouchableOpacity
               onPress={() => navigation.toggleDrawer()}
-              style={styles.drawerButton}
-            >
+              style={styles.drawerButton}>
               <MaterialIcons name="menu" size={26} color="#000" />
             </TouchableOpacity>
             <Text style={styles.welcomeText}>Welcome, {userName} 😊</Text>
+            <TouchableOpacity
+    onPress={() => navigation.navigate('Chats')}
+    style={styles.chatsButton}
+  >
+    <MaterialIcons name="chat" size={26} color="#000" />
+  </TouchableOpacity>
           </View>
           <View style={styles.postContainer}>
             <Text style={styles.title}>Posts</Text>
@@ -104,8 +108,7 @@ function HomeScreen({ navigation }) {
           </View>
           <TouchableOpacity
             style={styles.addButton}
-            onPress={() => navigation.navigate('Create')}
-          >
+            onPress={() => navigation.navigate('Create')}>
             <FontAwesome name="plus" size={20} color="#fff" />
           </TouchableOpacity>
         </>
@@ -128,11 +131,16 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 20,
   },
+  chatsButton: {
+    paddingTop:10,
+    paddingRight: 15,
+    color: '#4A90E2',
+  },
   drawerButton: {
     padding: 10,
     backgroundColor: 'transparent',
     borderRadius: 0,
-    shadowOffset: { width: 0, height: 0 },
+    shadowOffset: {width: 0, height: 0},
     shadowOpacity: 0,
     elevation: 0,
   },
@@ -175,7 +183,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 15,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
@@ -205,7 +213,7 @@ const styles = StyleSheet.create({
     borderColor: '#EAEAEA',
     marginBottom: 15,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.08,
     shadowRadius: 3,
     elevation: 1,
@@ -237,7 +245,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
+    shadowOffset: {width: 0, height: 3},
     shadowOpacity: 0.15,
     shadowRadius: 6,
     elevation: 4,
