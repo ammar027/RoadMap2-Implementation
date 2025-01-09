@@ -17,7 +17,7 @@ const GuestLogin = () => {
 
   const [guestName, setGuestName] = useState(userName || '');
   const [guestEmail, setGuestEmail] = useState(userEmail || '');
-  const [isEditing, setIsEditing] = useState(false);
+  const [currentStage, setCurrentStage] = useState('initial'); // "initial", "prompt", "signedIn"
 
   const handleGuestSignIn = () => {
     if (!guestName || !guestEmail) {
@@ -25,6 +25,7 @@ const GuestLogin = () => {
       return;
     }
     dispatch(signInAction({ userName: guestName, userEmail: guestEmail }));
+    setCurrentStage('signedIn');
     Alert.alert('Guest Sign-In', `Welcome, ${guestName}!`);
   };
 
@@ -32,75 +33,21 @@ const GuestLogin = () => {
     dispatch(signOutAction());
     setGuestName('');
     setGuestEmail('');
+    setCurrentStage('initial');
     Alert.alert('Sign-Out Success', 'You have been signed out!');
   };
 
-  const handleSaveChanges = () => {
-    if (!guestName || !guestEmail) {
-      Alert.alert('Missing Information', 'Name and email cannot be empty.');
-      return;
-    }
-    dispatch(signInAction({ userName: guestName, userEmail: guestEmail }));
-    setIsEditing(false);
-    Alert.alert('Profile Updated', 'Your profile has been updated!');
-  };
-
-  const renderEditingStage = () => (
-    <>
-      <Text style={styles.title}>Edit Profile</Text>
-      <TextInput
-        style={styles.input}
-        value={guestName}
-        onChangeText={setGuestName}
-        placeholder="Enter Name"
-      />
-      <TextInput
-        style={styles.input}
-        value={guestEmail}
-        onChangeText={setGuestEmail}
-        placeholder="Enter Email"
-        keyboardType="email-address"
-      />
-      <TouchableOpacity
-        style={styles.saveButton}
-        onPress={handleSaveChanges}
-      >
-        <Icon name="save" size={20} color="#fff" />
-        <Text style={styles.buttonText}>Save Changes</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.cancelButton}
-        onPress={() => setIsEditing(false)}
-      >
-        <Icon name="cancel" size={20} color="#fff" />
-        <Text style={styles.buttonText}>Cancel</Text>
-      </TouchableOpacity>
-    </>
+  const renderInitialStage = () => (
+    <TouchableOpacity
+      style={styles.signInButton}
+      onPress={() => setCurrentStage('prompt')}
+    >
+      <Icon name="login" size={20} color="#fff" />
+      <Text style={styles.buttonText}>Login as Guest</Text>
+    </TouchableOpacity>
   );
 
-  const renderSignedInStage = () => (
-    <>
-      <Text style={styles.title}>Welcome, {guestName}!</Text>
-      <Text style={styles.guestInfo}>Name: {guestName}</Text>
-      <Text style={styles.guestInfo}>Email: {guestEmail}</Text>
-      <TouchableOpacity
-        style={styles.editButton}
-        onPress={() => setIsEditing(true)}
-      >
-        <Icon name="edit" size={20} color="#fff" />
-        <Text style={styles.buttonText}>Edit Profile</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.signOutButton}
-        onPress={handleGuestSignOut}
-      >
-        <Icon name="logout" size={20} color="#fff" />
-        <Text style={styles.buttonText}>Sign Out</Text>
-      </TouchableOpacity>
-    </>
-  );
-
-  const renderSignedOutStage = () => (
+  const renderPromptStage = () => (
     <>
       <Text style={styles.title}>Guest Login</Text>
       <TextInput
@@ -120,32 +67,46 @@ const GuestLogin = () => {
         <Icon name="login" size={20} color="#fff" />
         <Text style={styles.buttonText}>Sign In</Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.cancelButton}
+        onPress={() => setCurrentStage('initial')}
+      >
+        <Icon name="cancel" size={20} color="#fff" />
+        <Text style={styles.buttonText}>Cancel</Text>
+      </TouchableOpacity>
+    </>
+  );
+
+  const renderSignedInStage = () => (
+    <>
+      <Text style={styles.title}>Welcome, {guestName}!</Text>
+      <Text style={styles.guestInfo}>Name: {guestName}</Text>
+      <Text style={styles.guestInfo}>Email: {guestEmail}</Text>
+      <TouchableOpacity
+        style={styles.signOutButton}
+        onPress={handleGuestSignOut}
+      >
+        <Icon name="logout" size={20} color="#fff" />
+        <Text style={styles.buttonText}>Sign Out</Text>
+      </TouchableOpacity>
     </>
   );
 
   return (
     <View style={styles.guestContainer}>
-      {isSignedIn
-        ? isEditing
-          ? renderEditingStage()
-          : renderSignedInStage()
-        : renderSignedOutStage()}
+      {currentStage === 'initial' && renderInitialStage()}
+      {currentStage === 'prompt' && renderPromptStage()}
+      {currentStage === 'signedIn' && renderSignedInStage()}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   guestContainer: {
-    backgroundColor: '#fff',
     borderRadius: 10,
     padding: 20,
-    margin: 20,
+    margin: 0,
     alignItems: 'center',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
     width: '90%',
   },
   title: {
@@ -186,27 +147,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 12,
   },
-  saveButton: {
-    flexDirection: 'row',
-    backgroundColor: '#4caf50',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 12,
-  },
   cancelButton: {
     flexDirection: 'row',
     backgroundColor: '#f44336',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 12,
-  },
-  editButton: {
-    flexDirection: 'row',
-    backgroundColor: '#2196f3',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,

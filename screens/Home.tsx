@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderBottomWidth: 1,
     borderBottomColor: '#EAEAEA',
-    paddingBottom: 5,
+    paddingBottom: 10,
     paddingLeft: 7,
   },
   emptyText: {

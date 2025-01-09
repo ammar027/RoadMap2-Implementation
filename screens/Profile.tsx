@@ -14,7 +14,8 @@ import { signIn as signInAction, signOut } from '../src/redux/userdataSlice';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { NativeModules } from 'react-native';
 import GuestLogin from './Geustlogin';
-
+import FacebookProfile from './FbProScrn';
+import { Divider } from 'react-native-paper';
 const { LoginModule } = NativeModules;
 
 type GoogleUser = {
@@ -26,6 +27,7 @@ type GoogleUser = {
 const ProfileScreen = () => {
   const [user, setUser] = useState<GoogleUser | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isFbLoggedIn, setIsFbLoggedIn] = useState(false);
   const [error, setError] = useState('');
 
   const { isSignedIn, userName, userEmail } = useSelector(state => state.userdata);
@@ -58,12 +60,8 @@ const ProfileScreen = () => {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
 
-      console.log('Google Sign-In successful:', userInfo);
-
       if (userInfo && userInfo.data && userInfo.data.user) {
         const { user } = userInfo.data;
-
-        console.log('User Info:');
         console.table({
           'Name': user.name || 'No name available',
           'Email': user.email || 'No email available',
@@ -116,7 +114,7 @@ const ProfileScreen = () => {
           <Image source={{ uri: user.photo }} style={styles.profileImage} />
           <Text style={styles.userName}>{user.name}</Text>
           <Text style={styles.userEmail}>{user.email}</Text>
-
+  
           <TouchableOpacity style={styles.button} onPress={handleGoogleSignOut}>
             <Text style={styles.buttonText}>Sign Out</Text>
           </TouchableOpacity>
@@ -124,33 +122,41 @@ const ProfileScreen = () => {
       ) : (
         <View style={styles.actionContainer}>
           <GuestLogin />
+          <View style={styles.horizontalDivider} />
+          <FacebookProfile />
           <GoogleSigninButton
             style={styles.signInButton}
             size={GoogleSigninButton.Size.Wide}
             color={GoogleSigninButton.Color.Dark}
             onPress={handleGoogleLogin}
           />
+          <View style={styles.horizontalDivider} />
           <View style={styles.sideBySideButtons}>
-            <TouchableOpacity
-              style={[styles.button, styles.signupButton]}
-              onPress={handleShowSignupScreen}
-            >
-              <Icon name="person-add" size={20} color="#fff" />
-              <Text style={styles.buttonText}>Signup</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.button, styles.loginButton]}
-              onPress={handleShowLoginScreen}
-            >
-              <Icon name="login" size={20} color="#fff" />
-              <Text style={styles.buttonText}>Login</Text>
-            </TouchableOpacity>
-          </View>
+  <TouchableOpacity
+    style={[styles.button, styles.signupButton]}
+    onPress={handleShowSignupScreen}
+  >
+    <Icon name="person-add" size={20} color="#fff" />
+    <Text style={styles.buttonText}>Signup</Text>
+  </TouchableOpacity>
+
+  {/* Vertical Divider */}
+  <View style={styles.verticalDivider} />
+
+  <TouchableOpacity
+    style={[styles.button, styles.loginButton]}
+    onPress={handleShowLoginScreen}
+  >
+    <Icon name="login" size={20} color="#fff" />
+    <Text style={styles.buttonText}>Login</Text>
+  </TouchableOpacity>
+</View>
         </View>
       )}
       {error && <Text style={styles.errorText}>{error}</Text>}
     </SafeAreaView>
   );
+  
 };
 
 const styles = StyleSheet.create({
@@ -177,6 +183,18 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginBottom: 16,
   },
+  verticalDivider: {
+    width: 1, // Thickness of the divider
+    backgroundColor: 'black', // Divider color
+    marginHorizontal: 10, // Space around the divider
+    alignSelf: 'stretch', // Stretch to match the height of the parent container
+  },
+  horizontalDivider: {
+    height: 1, // Thickness of the divider
+    backgroundColor: '#ddd', // Divider color
+    width: '100%', // Width of the divider
+    marginVertical: 10, // Space around the divider
+  },  
   userName: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -188,9 +206,10 @@ const styles = StyleSheet.create({
     color: '#666',
   },
   signInButton: {
-    width: '80%', // Make the button width adaptive
+    width: '75%', // Make the button width adaptive
     height: 48,
     marginVertical: 8,
+    borderWidth: 15,
   },
   button: {
     flexDirection: 'row',
