@@ -85,7 +85,7 @@ function HomeScreen({navigation}) {
               style={styles.drawerButton}>
               <MaterialIcons name="menu" size={26} color="#000" />
             </TouchableOpacity>
-            <Text style={styles.welcomeText}>Welcome, {userName} 😊</Text>
+            <Text style={styles.welcomeText}>Welcome, {userName} 👋</Text>
             <TouchableOpacity
     onPress={() => navigation.navigate('Chats')}
     style={styles.chatsButton}
