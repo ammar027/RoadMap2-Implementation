@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Image, Alert } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import installations from '@react-native-firebase/installations';
 import analytics from '@react-native-firebase/analytics';
@@ -14,13 +14,43 @@ const Chats = () => {
   const [profiles, setProfiles] = useState([]);
 
   useEffect(() => {
+    // Request permission for notifications
+    requestNotificationPermission();
+
+    // Set up notification listeners
+    const unsubscribeForeground = messaging().onMessage(async (remoteMessage) => {
+      Alert.alert('New Notification', JSON.stringify(remoteMessage.notification));
+    });
+
+    const unsubscribeBackground = messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+      console.log('Notification caused app to open from background state:', remoteMessage.notification);
+    });
+
+    // Fetch device token and profiles
     getDeviceTokenAndInstallationID();
     fetchProfiles();
 
     // Enable in-app messaging and log app_open event
     getInAppMessaging().setMessagesDisplaySuppressed(false);
     analytics().logEvent('app_open');
+
+    return () => {
+      unsubscribeForeground();
+    };
   }, []);
+
+  const requestNotificationPermission = async () => {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      console.log('Notification permission granted:', authStatus);
+    } else {
+      console.error('Notification permission not granted');
+    }
+  };
 
   const getDeviceTokenAndInstallationID = async () => {
     try {

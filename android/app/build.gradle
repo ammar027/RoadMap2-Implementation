@@ -96,17 +96,22 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file('my-upload-key.keystore') // Replace with your keystore file path
+            storePassword 'android' // Replace with your keystore password
+            keyAlias 'my-key-alias' // Replace with your key alias
+            keyPassword 'android' // Replace with your key password
+        }
     }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
         }
         release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
-            minifyEnabled enableProguardInReleaseBuilds
-            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
+            minifyEnabled true // Enables code shrinking, obfuscation, and optimization
+            shrinkResources true // Removes unused resources
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
 
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
@@ -114,6 +119,7 @@ android {
             }
         }
     }
+
 }
 
 dependencies {
@@ -147,3 +153,8 @@ allprojects {
         options.compilerArgs += ["-Xlint:deprecation", "-Xlint:unchecked"]
     }
 }
+
+project.ext.react = [
+    enableHermes: true  // Change to true to enable Hermes
+]
+
