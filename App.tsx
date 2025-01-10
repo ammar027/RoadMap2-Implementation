@@ -1,26 +1,21 @@
 import React from 'react';
-import {
-  StatusBar,
-  StyleSheet,
-  View,
-} from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
-import store, { persistor } from './src/redux/store';
+import {StatusBar, StyleSheet, View} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {Provider} from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
+import store, {persistor} from './src/redux/store';
 import HomeScreen from './screens/Home';
 import Details from './screens/Create';
 import ProfileScreen from './screens/Profile';
 import SettingsScreen from './screens/Settings';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import UserPage from './screens/User';
 import CounterJotai from './screens/counterScreen';
 import Chats from './screens/Chats';
-
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -46,7 +41,7 @@ const AppTheme = {
 };
 
 function TabNavigator() {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
 
   return (
     <View style={styles.container}>
@@ -57,15 +52,15 @@ function TabNavigator() {
       />
       <Tab.Navigator
         initialRouteName="Home"
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ color, size }) => {
+        screenOptions={({route}) => ({
+          tabBarIcon: ({color, size}) => {
             const icons = {
               Home: 'home',
               Create: 'edit',
               Users: 'people',
               'My Profile': 'person',
             };
-        
+
             return <Icon name={icons[route.name]} size={size} color={color} />;
           },
           tabBarActiveTintColor: AppTheme.colors.primary,
@@ -75,10 +70,9 @@ function TabNavigator() {
           headerTitleAlign: 'center',
           headerTitleStyle: [
             AppTheme.fonts.title,
-            { color: AppTheme.colors.textPrimary },
+            {color: AppTheme.colors.textPrimary},
           ],
-        })}
-      >
+        })}>
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Create" component={Details} />
         <Tab.Screen name="Users" component={UserPage} />
@@ -91,9 +85,21 @@ function TabNavigator() {
 function ModalStack() {
   return (
     <Stack.Navigator screenOptions={{presentation: 'modal'}}>
-      <Stack.Screen name="HomeTabs" component={TabNavigator} options={{headerShown: false}} />
-      <Stack.Screen name="Create" component={Details} options={{title: 'Create Item',headerShown: true}} />
-      <Stack.Screen name="Chats" component={Chats} options={{title: 'Chats',headerShown: true}} />
+      <Stack.Screen
+        name="HomeTabs"
+        component={TabNavigator}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Create"
+        component={Details}
+        options={{title: 'Create Item', headerShown: true}}
+      />
+      <Stack.Screen
+        name="Chats"
+        component={Chats}
+        options={{title: 'Chats', headerShown: true}}
+      />
     </Stack.Navigator>
   );
 }
@@ -134,20 +140,20 @@ export default function App() {
               }}
             />
             <Drawer.Screen
-              name="Settings"
-              component={SettingsScreen}
-              options={{
-                title: 'Settings',
-                drawerIcon: ({color, size}) => (
-                  <Icon name="settings" size={size} color={color} />
-                ),
-              }}
-            />
-            <Drawer.Screen
               name="Counter"
               component={CounterJotai}
               options={{
                 title: 'Counter',
+                drawerIcon: ({color, size}) => (
+                  <Icon name="add" size={size} color={color} />
+                ),
+              }}
+            />
+            <Drawer.Screen
+              name="Settings"
+              component={SettingsScreen}
+              options={{
+                title: 'Settings',
                 drawerIcon: ({color, size}) => (
                   <Icon name="settings" size={size} color={color} />
                 ),
