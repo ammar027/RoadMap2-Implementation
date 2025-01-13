@@ -17,6 +17,7 @@ import UserPage from './screens/User';
 import CounterJotai from './screens/counterScreen';
 import Chats from './screens/Chats';
 import crashlytics from '@react-native-firebase/crashlytics';
+import BootSplash from "react-native-bootsplash";
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -41,8 +42,12 @@ const AppTheme = {
   },
 };
 
+
+
 function TabNavigator() {
   const { t } = useTranslation();
+
+
 
   return (
     <View style={styles.container}>
@@ -122,6 +127,18 @@ export default function App() {
     // crashlytics().crash(); // Uncomment to simulate a crash
   }, []);
 
+
+  useEffect(() => {
+    const init = async () => {
+      // …do multiple sync or async tasks
+    };
+
+    init().finally(async () => {
+      await BootSplash.hide({ fade: true });
+      console.log("BootSplash has been hidden successfully");
+    });
+  }, []);
+
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
@@ -137,7 +154,7 @@ export default function App() {
               drawerStyle: { backgroundColor: '#f8f9fa', width: 250 },
             }}
           >
-            <Drawer.Screen
+            <Drawer.Screen 
               name="Tabs"
               component={ModalStack}
               options={{

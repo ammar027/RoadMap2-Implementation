@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Task1w2</string>  
+    <string name="app_name">SocialPulse</string>  
     <string name="facebook_app_id">1509085749781242</string>
     <string name="fb_login_protocol_scheme">fb1509085749781242</string>
     <string name="facebook_client_token">48fc910d540063e7199311d11fde111f</string>
