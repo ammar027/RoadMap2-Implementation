@@ -1,0 +1,45 @@
+name: React Native CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout your code
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      # 2. Set up Node.js (required for React Native)
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # 3. Install dependencies using Yarn
+      - name: Install Dependencies
+        run: yarn install
+
+      # 4. Run tests
+      - name: Run Tests
+        run: yarn test
+
+      # 5. Build Android Release APK
+      - name: Build Android APK
+        run: |
+          cd android
+          ./gradlew assembleRelease
+
+      # 6. Upload Android APK as Artifact
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
