@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Background color (optional, used as fallback if the image doesn't cover the screen) -->
+    <item android:drawable="@color/bootsplash_background" />
+
+    <!-- Full-screen splash image -->
+    <item>
+        <bitmap
+            android:src="@drawable/splash_image"
+            android:gravity="center" />
+    </item>
+
+</layer-list>
