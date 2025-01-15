@@ -27,19 +27,25 @@ jobs:
       - name: Install Dependencies
         run: yarn install
 
-      # 4. Navigate to Android directory and set executable permission for gradlew
-      - name: Set executable permission for gradlew
+      # 4. Decode and save keystore file
+      - name: Decode keystore
+        env:
+          ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
         run: |
-          cd android
-          chmod +x ./gradlew
+          mkdir -p android/app
+          echo "$ANDROID_KEYSTORE" | base64 --decode > android/app/my-upload-key.keystore
 
-      # 5. Build Android Release APK
+      # 5. Set executable permission for gradlew
+      - name: Set executable permission for gradlew
+        run: chmod +x ./gradlew
+
+      # 6. Build Android APK
       - name: Build Android APK
         run: |
           cd android
           ./gradlew assembleRelease
 
-      # 6. Upload Android APK as Artifact
+      # 7. Upload Android APK as Artifact
       - name: Upload Android APK
         uses: actions/upload-artifact@v3
         with:
