@@ -27,9 +27,10 @@ jobs:
       - name: Install Dependencies
         run: yarn install
 
-      # # 4. Run tests
-      # - name: Run Tests
-      #   run: yarn test
+      # # 4. Run permi
+      - name: Set executable permission for gradlew
+        run: chmod +x ./gradlew
+
 
       # 5. Build Android Release APK
       - name: Build Android APK
