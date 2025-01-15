@@ -134,7 +134,7 @@ export default function App() {
     // Simulate loading process
     setTimeout(() => {
         BootSplash.hide({ fade: true }); // Ensure splash is hidden
-    }, 100); // Adjust the timeout as needed
+    }, 2000); // Adjust the timeout as needed
 }, []);
 
   return (
