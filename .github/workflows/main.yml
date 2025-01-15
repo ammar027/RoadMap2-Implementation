@@ -27,10 +27,11 @@ jobs:
       - name: Install Dependencies
         run: yarn install
 
-      # # 4. Run permi
+      # 4. Navigate to Android directory and set executable permission for gradlew
       - name: Set executable permission for gradlew
-        run: chmod +x ./gradlew
-
+        run: |
+          cd android
+          chmod +x ./gradlew
 
       # 5. Build Android Release APK
       - name: Build Android APK
