@@ -37,7 +37,9 @@ jobs:
 
       # 5. Set executable permission for gradlew
       - name: Set executable permission for gradlew
-        run: chmod +x ./gradlew
+        run: |
+          cd android
+          chmod +x ./gradlew
 
       # 6. Build Android APK
       - name: Build Android APK
