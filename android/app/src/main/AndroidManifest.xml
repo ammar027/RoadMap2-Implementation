@@ -13,7 +13,8 @@
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher"
         android:allowBackup="false"
-        android:theme="@style/AppTheme"
+        android:exported="true"
+        android:theme="@style/BootTheme"
         android:supportsRtl="true">
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

@@ -128,16 +128,14 @@ export default function App() {
   }, []);
 
 
-  useEffect(() => {
-    const init = async () => {
-      // …do multiple sync or async tasks
-    };
 
-    init().finally(async () => {
-      await BootSplash.hide({ fade: true });
-      console.log("BootSplash has been hidden successfully");
-    });
-  }, []);
+
+  useEffect(() => {
+    // Simulate loading process
+    setTimeout(() => {
+        BootSplash.hide({ fade: true }); // Ensure splash is hidden
+    }, 100); // Adjust the timeout as needed
+}, []);
 
   return (
     <Provider store={store}>
