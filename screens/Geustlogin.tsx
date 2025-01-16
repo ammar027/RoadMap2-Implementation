@@ -38,6 +38,8 @@ const GuestLogin = () => {
   };
 
   const renderInitialStage = () => (
+    <View>
+    <Text style={styles.sectiontext}>Social Signup</Text>
     <TouchableOpacity
       style={styles.signInButton}
       onPress={() => setCurrentStage('prompt')}
@@ -45,6 +47,7 @@ const GuestLogin = () => {
       <Icon name="login" size={20} color="#fff" />
       <Text style={styles.buttonText}>Login as Guest</Text>
     </TouchableOpacity>
+    </View>
   );
 
   const renderPromptStage = () => (
@@ -104,8 +107,8 @@ const GuestLogin = () => {
 const styles = StyleSheet.create({
   guestContainer: {
     borderRadius: 10,
-    padding: 20,
-    margin: 0,
+    padding: 0,
+    margin: 10,
     alignItems: 'center',
     width: '90%',
   },
@@ -115,6 +118,14 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 15,
   },
+  sectiontext: {
+    fontSize: 13,
+    textTransform: 'uppercase',
+    fontWeight: '600',
+    marginVertical: 8,
+    color: '#808080',
+    textAlign: 'center', // Center the text horizontally
+  },  
   input: {
     width: '100%',
     paddingVertical: 12,

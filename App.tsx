@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StatusBar, StyleSheet, View } from 'react-native';
+import { StatusBar, StyleSheet, View, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -18,6 +18,8 @@ import CounterJotai from './screens/counterScreen';
 import Chats from './screens/Chats';
 import crashlytics from '@react-native-firebase/crashlytics';
 import BootSplash from "react-native-bootsplash";
+import { BlurView } from '@react-native-community/blur';
+
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -59,26 +61,37 @@ function TabNavigator() {
       <Tab.Navigator
         initialRouteName="Home"
         screenOptions={({ route }) => ({
-          tabBarIcon: ({ color, size }) => {
+          tabBarIcon: ({ color, size, focused }) => {
             const icons = {
-              Home: 'home',
-              Create: 'edit',
-              Users: 'people',
-              'My Profile': 'person',
+              Home: focused ? 'home' : 'home',
+              Create: focused ? 'edit' : 'edit',
+              Users: focused ? 'people' : 'people-outline',
+              'My Profile': focused ? 'person' : 'person-outline',
             };
-
+          
             return <Icon name={icons[route.name]} size={size} color={color} />;
           },
+          
           tabBarActiveTintColor: AppTheme.colors.primary,
           tabBarInactiveTintColor: AppTheme.colors.textSecondary,
           tabBarStyle: styles.tabBarStyle,
+          tabBarBackground: () => (
+            <BlurView
+              style={styles.tabBarBackground}
+              blurType="light"
+              blurAmount={20}
+              reducedTransparencyFallbackColor="white"
+            />
+          ),
           headerShown: route.name !== 'Home',
           headerTitleAlign: 'center',
           headerTitleStyle: [
             AppTheme.fonts.title,
             { color: AppTheme.colors.textPrimary },
           ],
-        })}
+        })
+        
+      }
       >
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Create" component={Details} />
@@ -136,6 +149,19 @@ export default function App() {
         BootSplash.hide({ fade: true }); // Ensure splash is hidden
     }, 2000); // Adjust the timeout as needed
 }, []);
+
+// useEffect(() => {
+//   if (Platform.OS === 'android') {
+//     // Make sure navigation bar icons are dark
+//     StatusBar.setNavigationBarColor('#F5F5F5');  // Set the navigation bar color
+//     StatusBar.setNavigationBarDividerColor('#F5F5F5');  // Divider color to match the background
+//     StatusBar.setTranslucent(false);  // Ensure the navigation bar isn't translucent
+//     if (typeof StatusBar.setNavigationBarIconColor === 'function') {
+//       StatusBar.setNavigationBarIconColor('black');  // Set navigation bar button icons to black
+//     }
+//   }
+// }, []);
+
 
   return (
     <Provider store={store}>
@@ -205,10 +231,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tabBarStyle: {
-    backgroundColor: AppTheme.colors.background,
     borderTopWidth: 0.5,
-    borderTopColor: AppTheme.colors.border,
     height: 60,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'transparent',
+    shadowColor: '#000', // iOS shadow
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5, // Android elevation
+    borderTopColor: AppTheme.colors.border,
+  },
+  tabBarBackground: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 60, // Same as tabBar height
+    width: '100%',
   },
   drawerStyle: {
     backgroundColor: AppTheme.colors.background,
