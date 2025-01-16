@@ -1,3 +1,4 @@
-<resources>
-    <color name="bootsplash_background">#ffff</color>
+<resources>>
+    <color name="bootsplash_background">#FFFFFF</color> 
+    <color name="mynavcolor">#F5F5F5</color>
 </resources>
