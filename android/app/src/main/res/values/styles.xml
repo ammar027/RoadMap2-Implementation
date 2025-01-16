@@ -11,5 +11,16 @@
         <item name="android:windowBackground">@drawable/splash_image</item>
         <!-- Theme to apply after the splash -->
         <item name="postBootSplashTheme">@style/AppTheme</item>
+
+            <!-- Hide status and navigation bars -->
+        <!-- <item name="android:windowFullscreen">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowTranslucentStatus">true</item> -->
+
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+
     </style>
 </resources>
