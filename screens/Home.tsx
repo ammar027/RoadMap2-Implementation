@@ -161,6 +161,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     zIndex: 10,
     alignSelf: 'center',
+    marginBottom: 60,
   },
   notificationText: {
     fontSize: 14,
