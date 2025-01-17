@@ -19,7 +19,8 @@ import Chats from './screens/Chats';
 import crashlytics from '@react-native-firebase/crashlytics';
 import BootSplash from "react-native-bootsplash";
 import { BlurView } from '@react-native-community/blur';
-
+import { TransitionPresets } from '@react-navigation/stack';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -104,7 +105,13 @@ function TabNavigator() {
 
 function ModalStack() {
   return (
-    <Stack.Navigator screenOptions={{ presentation: 'modal' }}>
+    <Stack.Navigator
+      screenOptions={{
+        presentation: 'modal',
+        gestureEnabled: true, // Enables swipe gestures to dismiss modals
+        ...TransitionPresets.FadeFromBottomAndroid, // Use predefined animation
+      }}
+    >
       <Stack.Screen
         name="HomeTabs"
         component={TabNavigator}
@@ -113,16 +120,25 @@ function ModalStack() {
       <Stack.Screen
         name="Create"
         component={Details}
-        options={{ title: 'Create Item', headerShown: true }}
+        options={{
+          title: 'Create Item',
+          headerShown: true,
+          ...TransitionPresets.FadeFromBottomAndroid, // Add fade animation for this screen
+        }}
       />
       <Stack.Screen
         name="Chats"
         component={Chats}
-        options={{ title: 'Chats', headerShown: true }}
+        options={{
+          title: 'Chats',
+          headerShown: true,
+          ...TransitionPresets.SlideFromRightIOS, // Slide animation for Chats
+        }}
       />
     </Stack.Navigator>
   );
 }
+
 
 export default function App() {
   useEffect(() => {
@@ -164,6 +180,7 @@ export default function App() {
 
 
   return (
+    <GestureHandlerRootView>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <NavigationContainer>
@@ -223,6 +240,7 @@ export default function App() {
         </NavigationContainer>
       </PersistGate>
     </Provider>
+    </GestureHandlerRootView>
   );
 }
 
