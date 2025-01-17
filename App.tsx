@@ -238,19 +238,21 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: 'transparent',
-    shadowColor: '#000', // iOS shadow
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 5, // Android elevation
+    elevation: 5,
     borderTopColor: AppTheme.colors.border,
+    overflow: 'hidden', // Add this to clip the blur effect
+    zIndex: 0,
   },
   tabBarBackground: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    height: 60, // Same as tabBar height
+    height: '100%', // Change to 100% to fill only the tab bar
     width: '100%',
   },
   drawerStyle: {
