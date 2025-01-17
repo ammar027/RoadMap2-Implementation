@@ -161,6 +161,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     zIndex: 10,
     alignSelf: 'center',
+    marginBottom: 60,
   },
   notificationText: {
     fontSize: 14,
@@ -187,6 +188,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
+    marginBottom:60,
   },
   title: {
     fontSize: 20,
@@ -236,7 +238,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     position: 'absolute',
-    bottom: 25,
+    bottom: 85,
     right: 25,
     backgroundColor: '#4A90E2',
     borderRadius: 30,

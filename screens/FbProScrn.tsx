@@ -51,6 +51,7 @@ const FacebookProfile = ({ onLogin, onLogout }) => {
         <Text style={styles.userName}>{fbUser.name}</Text>
         <Text style={styles.userEmail}>{fbUser.email}</Text>
         <TouchableOpacity style={styles.button} onPress={handleFacebookLogout}>
+          <Icon name="logout" size={20} color="#fff" />
           <Text style={styles.buttonText}>Sign Out</Text>
         </TouchableOpacity>
       </View>
@@ -91,11 +92,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#3b5998',
+    backgroundColor: '#1877F2',
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 8,
     marginVertical: 8,
+    elevation: 4, // Adds slight shadow for Android
+    shadowColor: '#000', // Adds shadow for iOS
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    width: '70%', 
   },
   button: {
     backgroundColor: '#d9534f',
@@ -107,6 +114,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 16,
+    fontWeight: '500'
   },
 });
 

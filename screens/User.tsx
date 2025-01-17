@@ -38,28 +38,30 @@ const UserPage = () => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={data}
-        keyExtractor={(item) => item.login.uuid}
-        renderItem={({ item }) => (
-          <View style={styles.item}>
-            <Image source={{ uri: item.picture.medium }} style={styles.profileImage} />
-            <View style={styles.textContainer}>
-              <Text style={styles.name}>
-                {item.name.first} {item.name.last}
-              </Text>
-              <Text style={styles.email}>{item.email}</Text>
-            </View>
-          </View>
-        )}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            colors={['#4A90E2']}
-            progressBackgroundColor="#ffffff"
-          />
-        }
-      />
+  data={data}
+  keyExtractor={(item) => item.login.uuid}
+  renderItem={({ item }) => (
+    <View style={styles.item}>
+      <Image source={{ uri: item.picture.medium }} style={styles.profileImage} />
+      <View style={styles.textContainer}>
+        <Text style={styles.name}>
+          {item.name.first} {item.name.last}
+        </Text>
+        <Text style={styles.email}>{item.email}</Text>
+      </View>
+    </View>
+  )}
+  contentContainerStyle={{ paddingBottom: 60 }} // Add bottom padding here
+  refreshControl={
+    <RefreshControl
+      refreshing={refreshing}
+      onRefresh={onRefresh}
+      colors={['#4A90E2']}
+      progressBackgroundColor="#ffffff"
+    />
+  }
+/>
+
     </View>
   );
 };
@@ -69,6 +71,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#f5f5f5',
+    paddingBottom:0,
   },
   center: {
     flex: 1,

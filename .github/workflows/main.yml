@@ -1,0 +1,109 @@
+# name: React Native CI/CD
+
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches:
+#       - main
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       # 1. Checkout your code
+#       - name: Checkout Code
+#         uses: actions/checkout@v2
+
+#       # 2. Set up Node.js (required for React Native)
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: 18
+
+#       # 3. Install dependencies using Yarn
+#       - name: Install Dependencies
+#         run: yarn install
+
+#       # 4. Decode and save keystore file
+#       - name: Decode keystore
+#         env:
+#           ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
+#         run: |
+#           mkdir -p android/app
+#           echo "$ANDROID_KEYSTORE" | base64 --decode > android/app/my-upload-key.keystore
+
+#       # 5. Set executable permission for gradlew
+#       - name: Set executable permission for gradlew
+#         run: |
+#           cd android
+#           chmod +x ./gradlew
+
+#       # 6. Build Android APK
+#       - name: Build Android APK
+#         run: |
+#           cd android
+#           ./gradlew assembleRelease
+
+#       # 7. Upload Android APK as Artifact
+#       - name: Upload Android APK
+#         uses: actions/upload-artifact@v3
+#         with:
+#           name: android-apk
+#           path: android/app/build/outputs/apk/release/app-release.apk
+name: React Native CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'yarn' # Enable Node modules caching
+
+      - name: Cache Gradle Dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile # Use frozen-lockfile for faster, deterministic installs
+
+      - name: Decode keystore
+        env:
+          ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
+        run: |
+          mkdir -p android/app
+          echo "$ANDROID_KEYSTORE" | base64 --decode > android/app/my-upload-key.keystore
+
+      - name: Build Android APK
+        working-directory: android
+        run: |
+          chmod +x ./gradlew
+          ./gradlew assembleRelease --no-daemon --parallel # Use parallel execution and no-daemon for faster builds
+
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
+          retention-days: 5 # Limit retention to save space

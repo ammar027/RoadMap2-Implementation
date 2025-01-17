@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   View,
@@ -7,16 +7,19 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/google-signin';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+} from '@react-native-google-signin/google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useDispatch, useSelector } from 'react-redux';
-import { signIn as signInAction, signOut } from '../src/redux/userdataSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {signIn as signInAction, signOut} from '../src/redux/userdataSlice';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { NativeModules } from 'react-native';
+import {NativeModules} from 'react-native';
 import GuestLogin from './Geustlogin';
 import FacebookProfile from './FbProScrn';
-import { Divider } from 'react-native-paper';
-const { LoginModule } = NativeModules;
+import {Divider} from 'react-native-paper';
+const {LoginModule} = NativeModules;
 
 type GoogleUser = {
   name: string;
@@ -30,12 +33,15 @@ const ProfileScreen = () => {
   const [isFbLoggedIn, setIsFbLoggedIn] = useState(false);
   const [error, setError] = useState('');
 
-  const { isSignedIn, userName, userEmail } = useSelector(state => state.userdata);
+  const {isSignedIn, userName, userEmail} = useSelector(
+    state => state.userdata,
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
     GoogleSignin.configure({
-      webClientId: '72666036321-qpf7p03d83iujevsedip3i0u2d2j3mph.apps.googleusercontent.com', // Replace with your actual Web Client ID
+      webClientId:
+        '72666036321-qpf7p03d83iujevsedip3i0u2d2j3mph.apps.googleusercontent.com', // Replace with your actual Web Client ID
       scopes: ['openid', 'profile', 'email'],
     });
 
@@ -61,10 +67,10 @@ const ProfileScreen = () => {
       const userInfo = await GoogleSignin.signIn();
 
       if (userInfo && userInfo.data && userInfo.data.user) {
-        const { user } = userInfo.data;
+        const {user} = userInfo.data;
         console.table({
-          'Name': user.name || 'No name available',
-          'Email': user.email || 'No email available',
+          Name: user.name || 'No name available',
+          Email: user.email || 'No email available',
           'Photo URL': user.photo || 'https://via.placeholder.com/120',
         });
 
@@ -111,11 +117,12 @@ const ProfileScreen = () => {
     <SafeAreaView style={styles.container}>
       {user ? (
         <View style={styles.profileContainer}>
-          <Image source={{ uri: user.photo }} style={styles.profileImage} />
+          <Image source={{uri: user.photo}} style={styles.profileImage} />
           <Text style={styles.userName}>{user.name}</Text>
           <Text style={styles.userEmail}>{user.email}</Text>
-  
+
           <TouchableOpacity style={styles.button} onPress={handleGoogleSignOut}>
+            <Icon name="logout" size={20} color="#fff" />
             <Text style={styles.buttonText}>Sign Out</Text>
           </TouchableOpacity>
         </View>
@@ -123,43 +130,90 @@ const ProfileScreen = () => {
         <View style={styles.actionContainer}>
           <GuestLogin />
           <View style={styles.horizontalDivider} />
+          <Text style={styles.sectiontext}>Social Signup</Text>
+          <TouchableOpacity style={styles.googleButton} onPress={handleGoogleLogin}>
+            <View style={styles.buttonContent}>
+              <Image
+                source={require('../assets/google-logo.png')} // Ensure the Google logo is placed correctly
+                style={styles.icon}
+              />
+              <Text style={styles.gbuttonText}>Sign in with Google</Text>
+            </View>
+          </TouchableOpacity>
           <FacebookProfile />
-          <GoogleSigninButton
+          {/* <GoogleSigninButton
             style={styles.signInButton}
             size={GoogleSigninButton.Size.Wide}
             color={GoogleSigninButton.Color.Dark}
             onPress={handleGoogleLogin}
-          />
+          /> */}
           <View style={styles.horizontalDivider} />
+          <Text style={styles.sectiontext}>Setup with email</Text>
           <View style={styles.sideBySideButtons}>
-  <TouchableOpacity
-    style={[styles.button, styles.signupButton]}
-    onPress={handleShowSignupScreen}
-  >
-    <Icon name="person-add" size={20} color="#fff" />
-    <Text style={styles.buttonText}>Signup</Text>
-  </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, styles.signupButton]}
+              onPress={handleShowSignupScreen}>
+              <Icon name="person-add" size={20} color="#fff" />
+              <Text style={styles.buttonText}>Signup</Text>
+            </TouchableOpacity>
 
-  {/* Vertical Divider */}
-  <View style={styles.verticalDivider} />
+            {/* Vertical Divider */}
+            <View style={styles.verticalDivider} />
 
-  <TouchableOpacity
-    style={[styles.button, styles.loginButton]}
-    onPress={handleShowLoginScreen}
-  >
-    <Icon name="login" size={20} color="#fff" />
-    <Text style={styles.buttonText}>Login</Text>
-  </TouchableOpacity>
-</View>
+            <TouchableOpacity
+              style={[styles.button, styles.loginButton]}
+              onPress={handleShowLoginScreen}>
+              <Icon name="login" size={20} color="#fff" />
+              <Text style={styles.buttonText}>Login</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       )}
       {error && <Text style={styles.errorText}>{error}</Text>}
     </SafeAreaView>
   );
-  
 };
 
 const styles = StyleSheet.create({
+  googleButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#ffff',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    marginVertical: 8,
+    elevation: 4, // Adds slight shadow for Android
+    shadowColor: '#000', // Adds shadow for iOS
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    width: '70%', 
+  },
+  sectiontext: {
+    fontSize: 13,
+    textTransform:'uppercase',
+    fontWeight: '600',
+    marginVertical: 8,
+    color: '#808080',
+  },
+  buttonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  icon: {
+    width: 24,
+    height: 24,
+    marginRight: 12, // Space between icon and text
+  },
+  gbuttonText: {
+    fontSize: 16,
+    fontWeight: '500', // A balanced weight for a modern look
+    color: 'black',
+    textAlign: 'center',
+  },
   container: {
     backgroundColor: '#ffff',
     // borderWidth: 0.3,
@@ -171,7 +225,7 @@ const styles = StyleSheet.create({
     shadowColor: '#000', // For shadow on iOS
     shadowOpacity: 0.1,
     shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: {width: 0, height: 4},
   },
   profileContainer: {
     alignItems: 'center',
@@ -185,7 +239,7 @@ const styles = StyleSheet.create({
   },
   verticalDivider: {
     width: 1, // Thickness of the divider
-    backgroundColor: 'black', // Divider color
+    backgroundColor: '#ddd', // Divider color
     marginHorizontal: 10, // Space around the divider
     alignSelf: 'stretch', // Stretch to match the height of the parent container
   },
@@ -194,7 +248,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ddd', // Divider color
     width: '100%', // Width of the divider
     marginVertical: 10, // Space around the divider
-  },  
+  },
   userName: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -215,7 +269,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#007BFF',
+    backgroundColor: '#000',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -245,6 +299,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '80%', // Adjust the container width
   },
+  
   errorText: {
     color: 'red',
     fontSize: 16,
@@ -262,6 +317,5 @@ const styles = StyleSheet.create({
     paddingLeft: 7,
   },
 });
-
 
 export default ProfileScreen;
