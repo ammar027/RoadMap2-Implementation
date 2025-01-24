@@ -1,28 +1,56 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
-import { useDispatch } from 'react-redux'; // Import useDispatch
-import { addPost } from '../src/redux/postsSlice'; // Import action
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { addPost } from '../src/redux/postsSlice';
 import { useTranslation } from 'react-i18next';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 function Details({ navigation }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const dispatch = useDispatch(); // Get dispatch function
+  const [imageUri, setImageUri] = useState(null);
+  const dispatch = useDispatch();
   const { t } = useTranslation();
+
+  const handleImagePicker = () => {
+    const options = {
+      mediaType: 'photo',
+      includeBase64: false,
+      maxHeight: 2000,
+      maxWidth: 2000,
+    };
+
+    launchImageLibrary(options, (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        const uri = response.assets[0].uri;
+        setImageUri(uri);
+      }
+    });
+  };
 
   const handleCreatePost = () => {
     if (!title || !content) {
       alert('Title and content are required!');
       return;
     }
-    const newPost = { title, content };
-    console.log('Adding new post:', newPost); // Log the new post data
-    dispatch(addPost(newPost)); // Dispatch action to add post
+    const newPost = { 
+      title, 
+      content, 
+      imageUri: imageUri || null 
+    };
+    console.log('Adding new post:', newPost);
+    dispatch(addPost(newPost));
     navigation.navigate('Home');
   };
-  
-  
+
+  const handleRemoveImage = () => {
+    setImageUri(null);
+  };
 
   return (
     <View style={styles.container}>
@@ -49,6 +77,27 @@ function Details({ navigation }) {
           onChangeText={setContent}
           multiline
         />
+      </View>
+      
+      {/* Image Upload Section */}
+      <View style={styles.imageUploadContainer}>
+        <TouchableOpacity style={styles.imagePickerButton} onPress={handleImagePicker}>
+          <FontAwesome name="image" size={20} color="#007AFF" />
+          <Text style={styles.imagePickerText}>  {t('upload_image')}</Text>
+        </TouchableOpacity>
+        
+        {imageUri && (
+          <View style={styles.imagePreviewContainer}>
+            <Image 
+              source={{ uri: imageUri }} 
+              style={styles.imagePreview} 
+              resizeMode="cover" 
+            />
+            <TouchableOpacity onPress={handleRemoveImage} style={styles.removeImageButton}>
+              <FontAwesome name="trash" size={20} color="#FF3B30" />
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
       
       {/* Create Post Button */}
@@ -115,7 +164,39 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 16,
     top: '22.5%',
-  }
+  },
+  imageUploadContainer: {
+    marginBottom: 15,
+  },
+  imagePickerButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F0F0F0',
+    padding: 10,
+    borderRadius: 8,
+    justifyContent: 'center',
+  },
+  imagePickerText: {
+    color: '#007AFF',
+    marginLeft: 10,
+  },
+  imagePreviewContainer: {
+    marginTop: 10,
+    position: 'relative',
+  },
+  imagePreview: {
+    width: '100%',
+    height: 200,
+    borderRadius: 8,
+  },
+  removeImageButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    backgroundColor: 'rgba(255,255,255,0.8)',
+    borderRadius: 20,
+    padding: 5,
+  },
 });
 
 export default Details;

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StatusBar, StyleSheet, View, Platform } from 'react-native';
+import { StatusBar, StyleSheet, View, Platform, SafeAreaView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -19,7 +19,6 @@ import Chats from './screens/Chats';
 import crashlytics from '@react-native-firebase/crashlytics';
 import BootSplash from "react-native-bootsplash";
 import { BlurView } from '@react-native-community/blur';
-import { TransitionPresets } from '@react-navigation/stack';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const Tab = createBottomTabNavigator();
@@ -53,6 +52,7 @@ function TabNavigator() {
 
 
   return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
     <View style={styles.container}>
       <StatusBar
         translucent
@@ -60,12 +60,13 @@ function TabNavigator() {
         barStyle="dark-content"
       />
       <Tab.Navigator
+        
         initialRouteName="Home"
         screenOptions={({ route }) => ({
           tabBarIcon: ({ color, size, focused }) => {
             const icons = {
-              Home: focused ? 'home' : 'home',
-              Create: focused ? 'edit' : 'edit',
+              Home: 'home',
+              Create:'edit',
               Users: focused ? 'people' : 'people-outline',
               'My Profile': focused ? 'person' : 'person-outline',
             };
@@ -77,13 +78,16 @@ function TabNavigator() {
           tabBarInactiveTintColor: AppTheme.colors.textSecondary,
           tabBarStyle: styles.tabBarStyle,
           tabBarBackground: () => (
-            <BlurView
-              style={styles.tabBarBackground}
-              blurType="light"
-              blurAmount={20}
-              reducedTransparencyFallbackColor="white"
-            />
+            <View style={StyleSheet.absoluteFillObject}>
+              <BlurView
+                style={StyleSheet.absoluteFillObject}
+                blurType="light"
+                blurAmount={25}
+                reducedTransparencyFallbackColor="light"
+              />
+            </View>
           ),
+                  
           headerShown: route.name !== 'Home',
           headerTitleAlign: 'center',
           headerTitleStyle: [
@@ -100,6 +104,7 @@ function TabNavigator() {
         <Tab.Screen name="My Profile" component={ProfileScreen} />
       </Tab.Navigator>
     </View>
+    </SafeAreaView>
   );
 }
 
@@ -109,7 +114,6 @@ function ModalStack() {
       screenOptions={{
         presentation: 'modal',
         gestureEnabled: true, // Enables swipe gestures to dismiss modals
-        ...TransitionPresets.FadeFromBottomAndroid, // Use predefined animation
       }}
     >
       <Stack.Screen
@@ -123,7 +127,6 @@ function ModalStack() {
         options={{
           title: 'Create Item',
           headerShown: true,
-          ...TransitionPresets.FadeFromBottomAndroid, // Add fade animation for this screen
         }}
       />
       <Stack.Screen
@@ -132,7 +135,6 @@ function ModalStack() {
         options={{
           title: 'Chats',
           headerShown: true,
-          ...TransitionPresets.SlideFromRightIOS, // Slide animation for Chats
         }}
       />
     </Stack.Navigator>
@@ -255,14 +257,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'transparent',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 5,
+    backgroundColor: 'rgba(255,255,255,0.2)',
     borderTopColor: AppTheme.colors.border,
-    overflow: 'hidden', // Add this to clip the blur effect
+    overflow: 'hidden',
     zIndex: 0,
   },
   tabBarBackground: {
@@ -270,9 +267,10 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: '100%', // Change to 100% to fill only the tab bar
+    height: 60, // Ensure it matches the tabBar height
     width: '100%',
-  },
+    zIndex: -1, // Push it to the background
+  },  
   drawerStyle: {
     backgroundColor: AppTheme.colors.background,
     width: 250,

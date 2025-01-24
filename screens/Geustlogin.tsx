@@ -39,7 +39,7 @@ const GuestLogin = () => {
 
   const renderInitialStage = () => (
     <View>
-    <Text style={styles.sectiontext}>Social Signup</Text>
+    <Text style={styles.sectiontext}>Guest</Text>
     <TouchableOpacity
       style={styles.signInButton}
       onPress={() => setCurrentStage('prompt')}

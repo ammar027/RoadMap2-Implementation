@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
   Animated,
+  Image,
 } from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {deletePost} from '../src/redux/postsSlice';
@@ -19,19 +20,18 @@ function HomeScreen({navigation}) {
   const {isSignedIn, userName} = useSelector(state => state.userdata);
   const dispatch = useDispatch();
 
-  const notificationOpacity = useRef(new Animated.Value(0)).current; // For fade-in/out animation
+  const notificationOpacity = useRef(new Animated.Value(0)).current;
 
   const showNotification = () => {
     Animated.timing(notificationOpacity, {
-      toValue: 1, // Fully visible
-      duration: 500, // Animation duration (500ms)
+      toValue: 1,
+      duration: 500,
       useNativeDriver: true,
     }).start();
 
-    // Automatically fade out after 10 seconds
     setTimeout(() => {
       Animated.timing(notificationOpacity, {
-        toValue: 0, // Invisible
+        toValue: 0,
         duration: 500,
         useNativeDriver: true,
       }).start();
@@ -40,7 +40,7 @@ function HomeScreen({navigation}) {
 
   useEffect(() => {
     if (!isSignedIn) {
-      showNotification(); // Show notification only if not signed in
+      showNotification();
     }
   }, [isSignedIn]);
 
@@ -51,8 +51,17 @@ function HomeScreen({navigation}) {
 
   const renderPost = ({item, index}) => (
     <View style={styles.post}>
+      {item.imageUri && (
+        <Image 
+          source={{ uri: item.imageUri }} 
+          style={styles.postImage} 
+          resizeMode="cover" 
+        />
+      )}
       <Text style={styles.postTitle}>{item.title}</Text>
       <Text>{item.content}</Text>
+      
+      
       <TouchableOpacity
         style={styles.deleteButton}
         onPress={() => handleDeletePost(index)}>
@@ -87,11 +96,10 @@ function HomeScreen({navigation}) {
             </TouchableOpacity>
             <Text style={styles.welcomeText}>Welcome, {userName} 👋</Text>
             <TouchableOpacity
-    onPress={() => navigation.navigate('Chats')}
-    style={styles.chatsButton}
-  >
-    <MaterialIcons name="chat" size={26} color="#000" />
-  </TouchableOpacity>
+              onPress={() => navigation.navigate('Chats')}
+              style={styles.chatsButton}>
+              <MaterialIcons name="chat" size={26} color="#000" />
+            </TouchableOpacity>
           </View>
           <View style={styles.postContainer}>
             <Text style={styles.title}>Posts</Text>
@@ -223,13 +231,13 @@ const styles = StyleSheet.create({
   },
   postTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: '700',
     color: '#333',
     marginBottom: 10,
   },
   deleteButton: {
     position: 'absolute',
-    top: 10,
+    bottom: 13,
     right: 10,
     backgroundColor: '#FF4D4D',
     borderRadius: 20,
@@ -254,6 +262,14 @@ const styles = StyleSheet.create({
   },
   flatListContent: {
     paddingBottom: 20,
+  },
+  // New style for post image
+  postImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 8,
+    marginTop: 0,
+    marginBottom: 10,
   },
 });
 
