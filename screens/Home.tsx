@@ -13,7 +13,6 @@ import {useSelector, useDispatch} from 'react-redux';
 import {deletePost} from '../src/redux/postsSlice';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {Ionicons} from 'react-native-vector-icons';
 
 function HomeScreen({navigation}) {
   const posts = useSelector(state => state.posts);
@@ -44,31 +43,28 @@ function HomeScreen({navigation}) {
     }
   }, [isSignedIn]);
 
-  const handleDeletePost = index => {
+  const handleDeletePost = (index: any) => {
     dispatch(deletePost(index));
     Alert.alert('Post Deleted', 'Post has been removed.');
   };
 
-  const renderPost = ({item, index}) => (
+  const renderPost = ({ item, index }) => (
     <View style={styles.post}>
       {item.imageUri && (
-        <Image 
-          source={{ uri: item.imageUri }} 
-          style={styles.postImage} 
-          resizeMode="cover" 
-        />
+        <Image source={{ uri: item.imageUri }} style={styles.postImage} resizeMode="cover" />
       )}
-      <Text style={styles.postTitle}>{item.title}</Text>
-      <Text>{item.content}</Text>
-      
-      
-      <TouchableOpacity
-        style={styles.deleteButton}
-        onPress={() => handleDeletePost(index)}>
-        <FontAwesome name="trash" size={18} color="#fff" />
-      </TouchableOpacity>
+      <View style={styles.txtcontent}>
+        <Text style={styles.postTitle} numberOfLines={1} ellipsizeMode="tail">{item.title}</Text>
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={() => handleDeletePost(index)}>
+          <FontAwesome name="trash" size={18} color="#fff" />
+        </TouchableOpacity>
+      </View>
+      <Text style={styles.postContent}>{item.content}</Text>
     </View>
   );
+  
 
   return (
     <View style={styles.container}>
@@ -196,7 +192,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
-    marginBottom:60,
+    marginBottom:55,
   },
   title: {
     fontSize: 20,
@@ -217,33 +213,47 @@ const styles = StyleSheet.create({
   },
   post: {
     padding: 15,
-    backgroundColor: '#FAFAFA',
-    borderRadius: 12,
+    backgroundColor: '#F9FAFB', // Soft gray background (shadcn style)
+    borderRadius: 12, // Rounded edges for a clean look
     borderWidth: 1,
-    borderColor: '#EAEAEA',
+    borderColor: '#E5E7EB', // Light gray border for a subtle card effect
     marginBottom: 15,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.08,
-    shadowRadius: 3,
-    elevation: 1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05, // Soft shadow for depth
+    shadowRadius: 4,
+    elevation: 2, // Slight elevation for a modern touch
     position: 'relative',
+  },
+  
+
+
+  txtcontent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingRight: 10,
+    paddingLeft: 5,
   },
   postTitle: {
     fontSize: 18,
     fontWeight: '700',
     color: '#333',
-    marginBottom: 10,
+    flex: 1, // Allows title to take available space
+    marginRight: 10, // Prevents overlap with delete button
   },
   deleteButton: {
-    position: 'absolute',
-    bottom: 13,
-    right: 10,
     backgroundColor: '#FF4D4D',
     borderRadius: 20,
     padding: 8,
     elevation: 3,
   },
+  postContent: {
+    marginTop: 5,
+    paddingLeft: 7,
+    fontSize:12,
+  },
+  
   addButton: {
     position: 'absolute',
     bottom: 85,
@@ -266,7 +276,7 @@ const styles = StyleSheet.create({
   // New style for post image
   postImage: {
     width: '100%',
-    height: 200,
+    height: 180,
     borderRadius: 8,
     marginTop: 0,
     marginBottom: 10,

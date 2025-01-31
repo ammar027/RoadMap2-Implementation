@@ -50,7 +50,7 @@ const FacebookProfile = ({ onLogin, onLogout }) => {
         <Image source={{ uri: fbUser.photo }} style={styles.profileImage} />
         <Text style={styles.userName}>{fbUser.name}</Text>
         <Text style={styles.userEmail}>{fbUser.email}</Text>
-        <TouchableOpacity style={styles.button} onPress={handleFacebookLogout}>
+        <TouchableOpacity style={styles.lgbutton} onPress={handleFacebookLogout}>
           <Icon name="logout" size={20} color="#fff" />
           <Text style={styles.buttonText}>Sign Out</Text>
         </TouchableOpacity>
@@ -110,6 +110,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 8,
     marginTop: 16,
+  },
+  lgbutton: {
+    backgroundColor: '#d9534f',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginTop: 16,
+    flexDirection: 'row'
   },
   buttonText: {
     color: '#fff',

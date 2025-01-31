@@ -105,6 +105,7 @@ function Details({ navigation }) {
         <FontAwesome name="check" size={20} color="#fff" />
         <Text style={styles.buttonText}>  {t('create_post_button')}</Text>
       </TouchableOpacity>
+    
     </View>
   );
 }
